@@ -49,12 +49,19 @@ class DingTalkClient:
             return build_keyword_webhook_url(self.webhook_url, self.keyword)
         return self.webhook_url
 
+    def _decorate_markdown(self, markdown: str) -> str:
+        if not self.keyword:
+            return markdown
+        if self.keyword.lower() in markdown.lower():
+            return markdown
+        return f"关键词：{self.keyword}\n\n{markdown}"
+
     def send_markdown(self, title: str, markdown: str) -> dict[str, Any]:
         payload = {
             "msgtype": "markdown",
             "markdown": {
                 "title": title,
-                "text": markdown,
+                "text": self._decorate_markdown(markdown),
             },
         }
         response = requests.post(self._url(), json=payload, timeout=self.timeout)

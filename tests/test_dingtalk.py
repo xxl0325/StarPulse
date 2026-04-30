@@ -42,6 +42,7 @@ def test_send_markdown(monkeypatch):
     data = client.send_markdown("title", "# report")
     assert data["errcode"] == 0
     assert captured["json"]["msgtype"] == "markdown"
+    assert "github" in captured["json"]["markdown"]["text"].lower()
     assert "keyword=github" in captured["url"]
 
 

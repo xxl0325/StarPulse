@@ -81,7 +81,7 @@ Use Workload Identity Federation instead of a long-lived Google service account 
 - `GCP_PROJECT`
 - `GCP_WORKLOAD_IDENTITY_PROVIDER`
 - `GCP_SERVICE_ACCOUNT_EMAIL`
-- `GITHUB_TOKEN_FOR_STARPULSE`
+- `STARPULSE_GITHUB_TOKEN`
 - `LLM_BASE_URL`
 - `LLM_API_KEY`
 - `LLM_MODEL`
@@ -97,7 +97,7 @@ The scheduled workflow runs daily at `02:00 UTC`, which is `10:00` Beijing time.
 1. Copy `.env.example` and fill in the values.
 2. Install dependencies.
 3. Make sure `GCP_PROJECT` is set. If you use a service account file, `GOOGLE_APPLICATION_CREDENTIALS` must point to an existing JSON file. If you use `gcloud auth application-default login`, you can leave that variable unset.
-4. Provide `GITHUB_TOKEN`, `LLM_API_KEY`, `LLM_MODEL`, `DINGTALK_WEBHOOK_URL`, and `DINGTALK_KEYWORD`.
+4. Provide `GITHUB_TOKEN`, `LLM_API_KEY`, `LLM_MODEL`, `DINGTALK_WEBHOOK_URL`, and `DINGTALK_KEYWORD` locally. In GitHub Actions, store the GitHub token as `STARPULSE_GITHUB_TOKEN`.
 
 ## Release Checklist
 

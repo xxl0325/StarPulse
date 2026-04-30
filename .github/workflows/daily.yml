@@ -49,7 +49,7 @@ jobs:
       - name: Run daily pipeline
         env:
           GCP_PROJECT: ${{ secrets.GCP_PROJECT }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN_FOR_STARPULSE }}
+          GITHUB_TOKEN: ${{ secrets.STARPULSE_GITHUB_TOKEN }}
           LLM_BASE_URL: ${{ secrets.LLM_BASE_URL }}
           LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
           LLM_MODEL: ${{ secrets.LLM_MODEL }}

@@ -2,10 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from collections.abc import Mapping
-from pathlib import Path
 from typing import Protocol
-
-from google.oauth2 import service_account
 
 from .dates import bq_table_name_for_date, validate_bq_suffix
 from .storage import DailyRepoStar
@@ -44,21 +41,12 @@ LIMIT {int(limit)}
 """.strip()
 
 
-def create_bigquery_client(project: str, credentials_path: str | Path | None = None):
+def create_bigquery_client(project: str, credentials_path=None):
     try:
         from google.cloud import bigquery
     except ImportError as exc:  # pragma: no cover - dependency missing only in broken envs
         raise RuntimeError("google-cloud-bigquery is required for BigQuery import") from exc
-    if credentials_path:
-        path = Path(credentials_path)
-        if not path.exists():
-            raise RuntimeError(
-                f"BigQuery credentials file not found: {path}. "
-                "Set GOOGLE_APPLICATION_CREDENTIALS to a valid service account JSON file "
-                "or unset it to use application default credentials."
-            )
-        credentials = service_account.Credentials.from_service_account_file(str(path))
-        return bigquery.Client(project=project, credentials=credentials)
+    _ = credentials_path
     return bigquery.Client(project=project)
 
 

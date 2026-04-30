@@ -1,0 +1,6 @@
+google-cloud-bigquery>=3.25.0
+python-dotenv>=1.0.1
+requests>=2.32.0
+
+[dev]
+pytest>=8.0.0

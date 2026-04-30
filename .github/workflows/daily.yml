@@ -1,0 +1,72 @@
+name: StarPulse Daily
+
+on:
+  schedule:
+    - cron: "0 2 * * *"
+  workflow_dispatch:
+    inputs:
+      date:
+        description: "Target date in YYYY-MM-DD"
+        required: false
+      skip_dingtalk:
+        description: "Skip DingTalk delivery"
+        required: false
+        default: "false"
+
+jobs:
+  daily:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v3
+        with:
+          project_id: ${{ secrets.GCP_PROJECT }}
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT_EMAIL }}
+          create_credentials_file: true
+          export_environment_variables: true
+
+      - name: Run tests
+        run: python -m pytest
+
+      - name: Run daily pipeline
+        env:
+          GCP_PROJECT: ${{ secrets.GCP_PROJECT }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN_FOR_STARPULSE }}
+          LLM_BASE_URL: ${{ secrets.LLM_BASE_URL }}
+          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+          LLM_MODEL: ${{ secrets.LLM_MODEL }}
+          DINGTALK_WEBHOOK_URL: ${{ secrets.DINGTALK_WEBHOOK_URL }}
+          DINGTALK_KEYWORD: ${{ secrets.DINGTALK_KEYWORD }}
+        run: |
+          args=""
+          if [ -n "${{ inputs.date }}" ]; then
+            args="$args --date ${{ inputs.date }}"
+          fi
+          if [ "${{ inputs.skip_dingtalk }}" = "true" ]; then
+            args="$args --skip-dingtalk"
+          fi
+          python scripts/run_daily_pipeline.py $args
+
+      - name: Upload SQLite artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: starpulse-data
+          path: data/

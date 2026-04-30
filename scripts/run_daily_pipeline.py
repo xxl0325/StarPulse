@@ -16,6 +16,7 @@ if str(ROOT) not in sys.path:
 load_dotenv(ROOT / ".env", override=False)
 
 from starpulse.config import load_settings  # noqa: E402
+from starpulse.dates import DateFormatError, parse_ymd  # noqa: E402
 from starpulse.pipeline import run_daily_pipeline  # noqa: E402
 
 
@@ -32,6 +33,11 @@ def build_parser() -> argparse.ArgumentParser:
 
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
+    if args.date:
+        try:
+            parse_ymd(args.date)
+        except DateFormatError as exc:
+            raise SystemExit(str(exc)) from exc
     settings = load_settings()
     result = run_daily_pipeline(
         settings,
@@ -51,4 +57,3 @@ def main(argv: list[str] | None = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

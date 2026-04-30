@@ -112,13 +112,6 @@ python scripts/retry_dingtalk.py --date 2026-04-29
 
 GitHub Actions 默认每天 `02:00 UTC` 执行，对应北京时间 `10:00`。
 
-## 发布前检查
-
-- 删除或保持未跟踪的 `.env`
-- 旋转开发期间使用过的 token
-- 确认 git 历史里没有密钥
-- GitHub Actions 使用 WIF，不要公开长期 service account key
-
 ## 测试
 
 ```bash

@@ -126,11 +126,6 @@ Retry DingTalk delivery without regenerating the report:
 python scripts/retry_dingtalk.py --date 2026-04-29
 ```
 
-## Configuration notes
-
-- BigQuery should query only a single GH Archive day table per run
-- Keep secrets out of the repository and out of SQLite
-- DingTalk keyword mode is supported; `github` is the default keyword
 
 ## Tests
 
